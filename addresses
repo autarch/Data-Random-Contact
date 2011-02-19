@@ -1,0 +1,42 @@
+use strict;
+use warnings;
+
+use Data::Dumper;
+use DBI;
+use Geography::States;
+use VegGuide::Location;
+use VegGuide::Schema;
+
+VegGuide::Schema->Connect();
+
+my $dbh = VegGuide::Schema->Schema()->driver()->handle();
+
+my @ids = map { $_->location_id() }
+    VegGuide::Location->new( location_id => 2 )->descendants();
+
+my $select
+    = 'SELECT address1, address2, city, region, postal_code FROM Vendor WHERE location_id IN (';
+$select .= join ',', ('?') x @ids;
+$select .= ')';
+$select .= ' ORDER BY region, city';
+
+my $dd = Data::Dumper->new( [] );
+$dd->Terse(1)->Indent(0)->Useqq(1)->Deparse(1)->Quotekeys(0)->Sortkeys(1);
+
+my $states = Geography::States->new('USA');
+
+for my $row (
+    @{ $dbh->selectall_arrayref( $select, { Slice => {} }, @ids ) } ) {
+
+    $row->{street1} = delete $row->{address1};
+    $row->{street2} = delete $row->{address2};
+
+    if ( defined $row->{region} ) {
+        $row->{region} = $states->state( $row->{region} )
+            if length $row->{region} == 2;
+
+        $row->{region_abbr} = $states->state( $row->{region} );
+    }
+
+    print $dd->Values( [$row] )->Dump(), "\n";
+}
