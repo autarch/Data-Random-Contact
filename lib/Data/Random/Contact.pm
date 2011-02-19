@@ -4,46 +4,57 @@ use namespace::autoclean;
 
 use Moose;
 
+use Class::Load qw( load_class );
 use Data::Random::Contact::Language::EN;
 use Data::Random::Contact::Country::US;
 use Data::Random::Contact::Types qw( Country Language );
+use DateTime;
+use Scalar::Util qw( blessed );
 
 has language => (
     is      => 'ro',
     isa     => Language,
-    default => sub { Data::Random::Contact::Language::EN->new() },
+    default => 'Data::Random::Contact::Language::EN',
 );
 
 has country => (
     is      => 'ro',
     isa     => Country,
-    default => sub { Data::Random::Contact::Country::US->new() },
+    default => 'Data::Random::Contact::Country::US',
 );
 
 override BUILDARGS => sub {
     my $class = shift;
     my $p     = super();
 
-    my $language
-        = $p->{language} =~ /^Data::Random::Contact::Language::/
-        ? $p->{language}
-        : 'Data::Random::Contact::Language::' . $p->{language};
+    if ( $p->{language} && !blessed $p->{language} ) {
+        my $language
+            = $p->{language} =~ /^Data::Random::Contact::Language::/
+            ? $p->{language}
+            : 'Data::Random::Contact::Language::' . $p->{language};
 
-    load_class($language);
+        load_class($language);
 
-    $p->{language} = $language->new();
+        $p->{language} = $language;
+    }
 
-    my $country
-        = $p->{country} =~ /^Data::Random::Contact::Country::/
-        ? $p->{country}
-        : 'Data::Random::Contact::Country::' . $p->{country};
+    if ( $p->{country} && !blessed $p->{country} ) {
+        my $country
+            = $p->{country}
+            && $p->{country} =~ /^Data::Random::Contact::Country::/
+            ? $p->{country}
+            : 'Data::Random::Contact::Country::' . $p->{country};
 
-    load_class($country);
+        load_class($country);
 
-    $p->{country} = $country->new();
-
+        $p->{country} = $country;
+    }
     return $p;
 };
+
+my $MaxBirthdate = DateTime->today()->subtract( years => 15 );
+my $MinBirthdate = DateTime->today()->subtract( years => 100 );
+my $Days = $MaxBirthdate->delta_days($MinBirthdate)->in_units('days') - 1;
 
 my $Suffix = 0;
 
@@ -53,6 +64,10 @@ sub person {
     my %contact;
 
     $contact{gender} = _percent() <= 50 ? 'male' : 'female';
+
+    my $salutation_meth = $contact{gender} . '_salutation';
+
+    $contact{salutation} = $self->language()->$salutation_meth();
 
     my $name_meth = $contact{gender} . '_name';
 
@@ -68,11 +83,18 @@ sub person {
 
     $contact{surname} = $self->language()->surname();
 
-    for my $type (qw( cell home office )) {
+    my $suffix_meth = $contact{gender} . '_suffix';
+
+    $contact{suffix} = $self->language()->$suffix_meth();
+
+    $contact{birth_date}
+        = $MinBirthdate->clone()->add( days => int( rand($Days) ) );
+
+    for my $type (qw( cell home work )) {
         $contact{phone}{$type} = $self->country()->phone_number();
     }
 
-    for my $type (qw( home office )) {
+    for my $type (qw( home work )) {
         $contact{address}{$type} = $self->country()->address();
     }
 

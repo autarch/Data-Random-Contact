@@ -33,6 +33,23 @@ sub female_name {
     return $Names{female}[ int( rand( scalar @{ $Names{female} } ) ) ];
 }
 
+my @MaleSalutations = qw( Dr Mr );
+sub male_salutation {
+    return $MaleSalutations[ int( rand( scalar @MaleSalutations ) ) ];
+}
+
+my @FemaleSalutations = qw( Dr Ms Miss Mrs );
+sub female_salutation {
+    return $FemaleSalutations[ int( rand( scalar @FemaleSalutations ) ) ];
+}
+
+my @MaleSuffixes = qw( Jr II III IV );
+sub male_suffix {
+    return $MaleSuffixes[ int( rand( scalar @MaleSuffixes ) ) ];
+}
+
+sub female_suffix { return }
+
 sub surname {
     return $Names{surname}[ int( rand( @{ $Names{surname} } ) ) ];
 }
