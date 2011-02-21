@@ -109,6 +109,42 @@ sub person {
     return \%contact;
 }
 
+sub household {
+    my $self = shift;
+
+    my %contact;
+
+    $contact{name} = $self->language()->household_name();
+
+    $contact{phone}{home} = $self->country()->phone_number();
+
+    $contact{address}{home} = $self->country()->address();
+
+    ( $contact{email}{home} = $contact{name} ) =~ s/ /./;
+    $contact{email}{home} .= '@' . $self->_domain();
+
+    return \%contact;
+}
+
+sub organization {
+    my $self = shift;
+
+    my %contact;
+
+    $contact{name} = $self->language()->organization_name();
+
+    $contact{phone}{office} = $self->country()->phone_number();
+
+    for my $type (qw( headquarters branch )) {
+        $contact{address}{$type} = $self->country()->address();
+    }
+
+    ( $contact{email}{home} = $contact{name} ) =~ s/ /./;
+    $contact{email}{home} .= '@' . $self->_domain();
+
+    return \%contact;
+}
+
 {
 
     # Fake Name Generator uses these domains, so I assume they're safe.

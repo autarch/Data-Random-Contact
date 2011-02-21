@@ -5,6 +5,7 @@ use warnings;
 use autodie;
 
 my %Names;
+my @Words;
 
 {
     my $key;
@@ -12,7 +13,7 @@ my %Names;
     while (<DATA>) {
         next unless /\S/;
 
-        if ( /__(\w+)__/ ) {
+        if (/__(\w+)__/) {
             $key = $1;
         }
         else {
@@ -22,6 +23,13 @@ my %Names;
 
             push @{ $Names{$key} }, $_;
         }
+    }
+
+    open my $fh, '<', '/usr/share/dict/words';
+
+    while (<$fh>) {
+        chomp;
+        push @Words, $_;
     }
 }
 
@@ -34,24 +42,52 @@ sub female_name {
 }
 
 my @MaleSalutations = qw( Dr Mr );
+
 sub male_salutation {
     return $MaleSalutations[ int( rand( scalar @MaleSalutations ) ) ];
 }
 
 my @FemaleSalutations = qw( Dr Ms Miss Mrs );
+
 sub female_salutation {
     return $FemaleSalutations[ int( rand( scalar @FemaleSalutations ) ) ];
 }
 
 my @MaleSuffixes = qw( Jr II III IV );
+
 sub male_suffix {
     return $MaleSuffixes[ int( rand( scalar @MaleSuffixes ) ) ];
 }
 
-sub female_suffix { return }
+sub female_suffix {return}
 
 sub surname {
     return $Names{surname}[ int( rand( @{ $Names{surname} } ) ) ];
+}
+
+my @HouseholdNames = (
+    'The %s Home',
+    'The %s House',
+    'The %s Household',
+    'The %s\s',
+    '%s House',
+    '%s Household',
+);
+
+sub household_name {
+    my $surname = surname();
+    my $pattern = $HouseholdNames[ int( rand(@HouseholdNames) ) ];
+
+    my $name = sprintf( $pattern, $surname );
+    $name =~ s/ss$/ses/;
+
+    return $name;
+}
+
+sub organization_name {
+    my $num = ( int( rand(4) ) ) + 1;
+
+    return join q{ }, map { $Words[ int( rand(@Words) ) ] } 1 .. $num;
 }
 
 1;
