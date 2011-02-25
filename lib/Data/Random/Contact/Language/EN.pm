@@ -69,7 +69,7 @@ my @HouseholdNames = (
     'The %s Home',
     'The %s House',
     'The %s Household',
-    'The %s\s',
+    'The %ss',
     '%s House',
     '%s Household',
 );
