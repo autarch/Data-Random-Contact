@@ -120,7 +120,7 @@ sub household {
 
     $contact{address}{home} = $self->country()->address();
 
-    ( $contact{email}{home} = $contact{name} ) =~ s/ /./;
+    ( $contact{email}{home} = $contact{name} ) =~ s/\W/./g;
     $contact{email}{home} .= '@' . $self->_domain();
 
     return \%contact;
