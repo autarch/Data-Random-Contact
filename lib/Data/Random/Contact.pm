@@ -90,7 +90,7 @@ sub person {
     $contact{birth_date}
         = $MinBirthdate->clone()->add( days => int( rand($Days) ) );
 
-    for my $type (qw( cell home work )) {
+    for my $type (qw( mobile home work )) {
         $contact{phone}{$type} = $self->country()->phone_number();
     }
 
