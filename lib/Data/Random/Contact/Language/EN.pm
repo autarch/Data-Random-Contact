@@ -33,12 +33,38 @@ my @Words;
     }
 }
 
-sub male_name {
+sub male_given_name {
     return $Names{male}[ int( rand( scalar @{ $Names{male} } ) ) ];
 }
 
-sub female_name {
+sub female_given_name {
     return $Names{female}[ int( rand( scalar @{ $Names{female} } ) ) ];
+}
+
+sub male_middle_name {
+    my $self = shift;
+
+    return $self->_middle( $self->male_given_name() );
+}
+
+sub female_middle_name {
+    my $self = shift;
+
+    return $self->_middle( $self->female_given_name() );
+}
+
+sub _middle {
+    my $self = shift;
+    my $name = shift;
+
+    my $middle_p = Data::Random::Contact::_percent();
+
+    if ( $middle_p <= 25 ) {
+        return $name;
+    }
+    elsif ( $middle_p <= 75 ) {
+        return substr( $name, 0, 1 );
+    }
 }
 
 my @MaleSalutations = qw( Dr Mr );

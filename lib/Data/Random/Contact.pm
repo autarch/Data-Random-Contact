@@ -69,17 +69,13 @@ sub person {
 
     $contact{salutation} = $self->language()->$salutation_meth();
 
-    my $name_meth = $contact{gender} . '_name';
+    my $name_meth = $contact{gender} . '_given_name';
 
     $contact{given} = $self->language()->$name_meth();
 
-    my $middle_p = _percent();
-    if ( $middle_p <= 25 ) {
-        $contact{middle} = $self->language()->$name_meth();
-    }
-    elsif ( $middle_p <= 75 ) {
-        $contact{middle} = substr( $self->language()->$name_meth(), 0, 1 );
-    }
+    my $middle_name_meth = $contact{gender} . '_middle_name';
+
+    $contact{middle} = $self->language()->$middle_name_meth();
 
     $contact{surname} = $self->language()->surname();
 
@@ -168,3 +164,362 @@ sub _percent {
 __PACKAGE__->meta()->make_immutable();
 
 1;
+
+# ABSTRACT: Generate random contact data
+
+__END__
+
+=head1 SYNOPSIS
+
+    use Data::Random::Contact;
+
+    my $randomizer = Data::Random::Contact->new();
+
+    my $person       = $rand->person();
+    my $household    = $rand->household();
+    my $organization = $rand->organization();
+
+=head1 DESCRIPTION
+
+This module generates random data for contacts. This is useful if you're
+working an application that manages this sort of data.
+
+It generates three types of contacts, people, households, and
+organizations.
+
+=head1 LICENSING
+
+The data that this module uses comes from several sources. Names are based on
+data from Fake Name Generator (L<http://www.fakenamegenerator.com>). This
+data is dual-licensed under GPLv3 or CC BY-SA 3.0 (United Stated). See
+http://www.fakenamegenerator.com/license.php for licensing details.
+
+The address data is all B<real addresses> from the VegGuide.org website
+(L<http://vegguide.org>). This data is licensed under the CC BY-NC-SA 3.0
+(United Stated) license.
+
+All other data is generated algorithmically.
+
+Whether a license can apply to things like addresses and names is debatable,
+but I am not a lawyer.
+
+=head1 METHODS
+
+This module provides just a few public methods:
+
+=head2 Data::Random::Contact->new()
+
+This constructs a new object. It accepts two optional parameters:
+
+=over 4
+
+=item * language
+
+This can either be a language name like "EN" or an instantiated language
+class, for example L<Data::Random::Contact::Language::EN>.
+
+The language is used to generate names.
+
+This defaults to "EN".
+
+Currently this distribution only ships with one language, English
+(L<Data::Random::Contact::Language::EN>).
+
+=item * country
+
+This can either be a country name like "US" or an instantiated country
+class, for example L<Data::Random::Contact::Country::US>.
+
+The country is used to generate phone numbers and addresses.
+
+This defaults to "EN".
+
+Currently this distribution only ships with one country, US
+(L<Data::Random::Contact::Country::US>).
+
+=back
+
+=head2 $randomizer->person()
+
+This returns a random set of data for a single person.
+
+See L</RETURNED DATA> for details.
+
+=head2 $randomizer->household()
+
+This returns a random set of data for a single household.
+
+See L</RETURNED DATA> for details.
+
+=head2 $randomizer->organization()
+
+This returns a random set of data for a single organization.
+
+See L</RETURNED DATA> for details.
+
+=head1 RETURNED DATA
+
+Each of the methods that return contact data returns a complicated
+hashref-based data structure.
+
+=head2 Shared Data
+
+Some of the data is shared across all contact types:
+
+All contact types return email, phone, and address data. This data is
+available under the appropriate key ("email", "phone", or "address") in the
+top-level data structure.
+
+Under that key the data is further broken down by type, which will be
+something like "home", "work", "office", etc. Every contact will have all the
+valid keys set. In other words, a person will always have both a home and work
+email address.
+
+The email data will always be at one of these domains: pookmail.com,
+trashymail.com, dodgit.com, mailinator.com, or spambob.com.
+
+The phone number will be a string containing all the phone number data.
+
+Each address is further broken down as a hashref data structure.
+
+See the appropriate language module for details on phone numbers and
+addresses.
+
+Here's an example of the shared data for a person (using US data):
+
+    {
+        address => {
+            home => {
+                city        => "Reno",
+                postal_code => 89503,
+                region      => "Nevada",
+                region_abbr => "NV",
+                street_1    => "501 W. 1st St.",
+                street_2    => undef
+            },
+            work => {
+                city        => "Minneapolis",
+                postal_code => 55406,
+                region      => "Minnesota",
+                region_abbr => "MN",
+                street_1    => "2823 E. Franklin Avenue",
+                street_2    => undef
+            }
+        },
+        email => {
+            home => "charlotte.t.dolan\@pookmail.com",
+            work => "charlotte0\@dodgit.com"
+        },
+        phone => {
+            home   => "508-383-7535",
+            mobile => "775-371-7227",
+            work   => "602-995-6077"
+        },
+    }
+
+=head2 Person Data
+
+Since much of this data is language-specific, you should see the appropriate
+language module for details. Some keys may be undefined, depending on the
+language.
+
+The data for a person includes:
+
+=over 4
+
+=item * given
+
+The person's given name.
+
+The set of names used is determined by the language.
+
+=item * middle
+
+The person's middle name or initial.
+
+The set of names used is determined by the language.
+
+=item * surname
+
+The person's surname.
+
+The set of names used is determined by the language.
+
+=item * gender
+
+This will be either "male" or "female".
+
+=item * salutation
+
+A salutation for the person ("Mr", "Ms", etc.). These salutations are
+gender-specific.
+
+The set of salutations used is determined by the language.
+
+=item * suffix
+
+An optional suffix like "Jr" or "III".
+
+The set of salutations used is determined by the language.
+
+=item * birth_date
+
+A L<DateTime> object representing the person's birth date. The date will be
+somewhere between 15 and 100 years in the past.
+
+=item * email addresses
+
+The email address types for a person are "home" and "work".
+
+=item * phone numbers
+
+The phone number types for a person are "home", "work", and "mobile".
+
+=item * addresses
+
+The address types for a person are "home" and "work".
+
+=back
+
+=head2 Household Data
+
+The data for a person includes:
+
+=over 4
+
+=item * name
+
+The household name.
+
+The set of names used is determined by the language.
+
+=item * email addresses
+
+The only email address type for a household is "home".
+
+=item * phone numbers
+
+The only phone number type for a household is "home".
+
+=item * addresses
+
+The only address type for a household is "home".
+
+=back
+
+=head2 Organization Data
+
+The data for a person includes:
+
+=over 4
+
+=item * name
+
+The organization name.
+
+The set of names used is determined by the language.
+
+=item * email addresses
+
+The only email address type for an organization is "home".
+
+=item * phone numbers
+
+The only phone number type for an organization is "office".
+
+=item * addresses
+
+The address types for a organization are "headquarters" and "branch".
+
+=back
+
+=head2 Data Dumps
+
+Here are complete data dumps for each contact type:
+
+=over 4
+
+=item * Person
+
+    {
+        given      => "Gregory",
+        middle     => "Antoine",
+        surname    => "Jones",
+        birth_date => bless( {'...'}, 'DateTime' ),
+        salutation => "Mr",
+        suffix     => "IV",
+        gender     => "male",
+        address => {
+            home => {
+                city        => "Boulder",
+                postal_code => 80304,
+                region      => "Colorado",
+                region_abbr => "CO",
+                street_1    => "2785 Iris Avenue",
+                street_2    => undef
+            },
+            work => {
+                city        => "Albuquerque",
+                postal_code => 87106,
+                region      => "New Mexico",
+                region_abbr => "NM",
+                street_1    => "2110 Central Ave SE",
+                street_2    => undef
+            }
+        },
+        email      => {
+            home => "gregory.antoine.jones\@trashymail.com",
+            work => "gregory0\@pookmail.com"
+        },
+        phone  => {
+            home   => "881-348-3582",
+            mobile => "727-862-8526",
+            work   => "305-389-4232"
+        },
+    }
+
+=item * Household
+
+    {
+        name    => "The Briley Household",
+        address => {
+            home => {
+                city        => "Lombard",
+                postal_code => undef,
+                region      => "Illinois",
+                region_abbr => "IL",
+                street_1    => "2361 Fountain Square Dr.",
+                street_2    => undef
+            }
+        },
+        email => { home => "The.Briley.Household\@mailinator.com" },
+        phone => { home => "307-342-9913" }
+    }
+
+=item * Organization
+
+    {
+        name    => "pastorate womanish",
+        address => {
+            branch => {
+                city        => "Northbrook",
+                postal_code => undef,
+                region      => "Illinois",
+                region_abbr => "IL",
+                street_1    => "1819 Lake Cook Rd.",
+                street_2    => undef
+            },
+            headquarters => {
+                city        => "Springfield",
+                postal_code => undef,
+                region      => "New Jersey",
+                region_abbr => "NJ",
+                street_1    => "518 Millburn Ave",
+                street_2    => undef
+            }
+        },
+        email => { home   => "pastorate.womanish\@mailinator.com" },
+        phone => { office => "876-278-8382" }
+    }
+
+=cut
