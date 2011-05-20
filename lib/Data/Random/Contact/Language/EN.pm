@@ -126,66 +126,6 @@ sub organization_name {
 # The data is dual-licensed under GPLv3 _or_ CC BY-SA 3.0 (United Stated). See
 # http://www.fakenamegenerator.com/license.php for licensing details.
 
-__END__
-
-=head1 DESCRIPTION
-
-This module provides English language name data.
-
-=head1 METHODS
-
-This module provides the following methods:
-
-=head2 $en->male_given_name()
-
-Returns a random male given name.
-
-=head2 $en->female_given_name()
-
-Returns a random female given name.
-
-=head2 $en->male_middle_name()
-
-Returns a random male middle name. This will either be a full name or an
-initial.
-
-=head2 $en->female_middle_name()
-
-Returns a random female middle name. This will either be a full name or an
-initial.
-
-=head2 $en->male_salutation()
-
-Returns an appropriate salutation for a man, like "Dr" or "Mr".
-
-=head2 $en->female_salutation()
-
-Returns an appropriate salutation for a man, like "Dr", "Ms", or "Mrs".
-
-=head2 $en->male_suffix()
-
-Returns an appropriate suffix for a man, like "Jr" or "III".
-
-=head2 $en->female_suffix()
-
-This always returns C<undef>.
-
-=head2 $en->surname()
-
-Returns a random surname.
-
-=head2 $en->household_name()
-
-This returns something like "The Smith Home" or "The Abads". The name always
-incorporates an English surname.
-
-=head2 $en->organization_name()
-
-This returns a random name based on English dictionary words. It will consist
-of 1-4 random words separated by a single space.
-
-=cut
-
 __DATA__
 __male__
 Aaron
@@ -2782,3 +2722,63 @@ Youngman
 Zavala
 Zavala
 Zito
+
+__END__
+
+=head1 DESCRIPTION
+
+This module provides English language name data.
+
+=head1 METHODS
+
+This module provides the following methods:
+
+=head2 $en->male_given_name()
+
+Returns a random male given name.
+
+=head2 $en->female_given_name()
+
+Returns a random female given name.
+
+=head2 $en->male_middle_name()
+
+Returns a random male middle name. This will either be a full name or an
+initial.
+
+=head2 $en->female_middle_name()
+
+Returns a random female middle name. This will either be a full name or an
+initial.
+
+=head2 $en->male_salutation()
+
+Returns an appropriate salutation for a man, like "Dr" or "Mr".
+
+=head2 $en->female_salutation()
+
+Returns an appropriate salutation for a man, like "Dr", "Ms", or "Mrs".
+
+=head2 $en->male_suffix()
+
+Returns an appropriate suffix for a man, like "Jr" or "III".
+
+=head2 $en->female_suffix()
+
+This always returns C<undef>.
+
+=head2 $en->surname()
+
+Returns a random surname.
+
+=head2 $en->household_name()
+
+This returns something like "The Smith Home" or "The Abads". The name always
+incorporates an English surname.
+
+=head2 $en->organization_name()
+
+This returns a random name based on English dictionary words. It will consist
+of 1-4 random words separated by a single space.
+
+=cut
