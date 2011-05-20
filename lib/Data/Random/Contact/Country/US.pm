@@ -46,6 +46,53 @@ sub address {
 
 1;
 
+# ABSTRACT: US phone number and address data
+
+=head1 DESCRIPTION
+
+This module provides US country phone and address data.
+
+=head1 METHODS
+
+This module provides the following methods:
+
+=head2 $country->phone_number()
+
+This returns a phone number like "212-555-1234". The area codes are all valid
+US area codes. The number prefix will be a random number from 200 to 999.
+
+=head2 $country->address()
+
+This returns a hash reference with the following keys:
+
+=over 4
+
+=item * street_1
+
+The first line of the street address.
+
+=item * street_2
+
+The second line of the street address. This is usually C<undef>.
+
+=item * city
+
+The address's city.
+
+=item * region
+
+The address's state.
+
+=item * postal_code
+
+The address's zip code.
+
+=back
+
+Note that any address component can be C<undef>.
+
+=cut
+
 # Address data comes VegGuide.org
 #
 # The data is licensed under CC BY-NC-SA 3.0 (United Stated).
