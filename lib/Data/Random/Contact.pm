@@ -181,6 +181,8 @@ __END__
 
 =head1 DESCRIPTION
 
+B<This module is still alpha, and the API may change in future releases.>
+
 This module generates random data for contacts. This is useful if you're
 working an application that manages this sort of data.
 
