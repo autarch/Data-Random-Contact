@@ -524,4 +524,6 @@ Here are complete data dumps for each contact type:
         phone => { office => "876-278-8382" }
     }
 
+=back
+
 =cut
