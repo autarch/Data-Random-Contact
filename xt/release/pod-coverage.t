@@ -9,9 +9,18 @@ use Test::Requires {
     'Test::Pod::Coverage' => '1.04',
 };
 
-pod_coverage_ok(
-    'Data::Random::Contact',
-    'Pod coverage for Data::Random::Contact'
+my @modules = qw(
+    Data::Random::Contact
+    Data::Random::Contact::Country::US
+    Data::Random::Contact::Language::EN
 );
+
+
+for my $module (@modules) {
+    pod_coverage_ok(
+        $module,
+        "Pod coverage for $module",
+    );
+}
 
 done_testing();
