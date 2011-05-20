@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.02     2011-05-20
+
 - Remove use of MooseX::Types::Common::String, which was not needed.
 
 
