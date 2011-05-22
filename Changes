@@ -1,5 +1,10 @@
 {{$NEXT}}
 
+- Instead of assuming that /usr/share/dict/words exists (and is in English),
+  the Data::Random::Contact::Language::EN module now includes a copy of the
+  dictionary on my system.
+
+
 0.02     2011-05-20
 
 - Remove use of MooseX::Types::Common::String, which was not needed.
