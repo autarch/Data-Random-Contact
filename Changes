@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- The EN language module also didn't provide any surnames. This time I wrote a
+  few tests.
+
+
 0.04     2011-05-23
 
 - The EN language module didn't provide any given names (this distro needs
