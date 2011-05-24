@@ -13,7 +13,7 @@ my @Words;
     while (<DATA>) {
         next unless /\S/;
 
-        if (/__(\w+)(?:_(\w+))?__/) {
+        if (/__([^_]+)(?:_([^_]+))?__/) {
             if ( $1 eq 'names' ) {
                 $array = $Names{$2} = [];
             }
