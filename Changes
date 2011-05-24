@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.05     2011-05-23
+
 - The EN language module also didn't provide any surnames. This time I wrote a
   few tests.
 
