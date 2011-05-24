@@ -1,5 +1,9 @@
 {{$NEXT}}
 
+- The EN language module didn't provide any given names (this distro needs
+  some real tests).
+
+
 0.03     2011-05-22
 
 - Instead of assuming that /usr/share/dict/words exists (and is in English),
