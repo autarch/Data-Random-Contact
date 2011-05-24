@@ -1,5 +1,7 @@
 {{$NEXT}}
 
+0.04     2011-05-23
+
 - The EN language module didn't provide any given names (this distro needs
   some real tests).
 
