@@ -173,7 +173,7 @@ __END__
 
     use Data::Random::Contact;
 
-    my $randomizer = Data::Random::Contact->new();
+    my $rand = Data::Random::Contact->new();
 
     my $person       = $rand->person();
     my $household    = $rand->household();
